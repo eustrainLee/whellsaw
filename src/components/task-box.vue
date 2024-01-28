@@ -7,12 +7,30 @@ defineProps<{ msg: string }>()
 var count = ref(0)
 var str_value = ref("")
 
+interface Task {
+  id?: number | null,
+  title: string,
+  create_time?: Date | null | undefined,
+  last_update_time?: Date | null | undefined,
+  childs: [number] | [],
+  state: "Pending" | "Doing" | "Paused" | "Canceld" | "Done" | "Failed"
+}
 
 async function doClickCount(count :number) :Promise<number> {
     return await invoke("next_number", { value: count })
 }
 
 async function doRefresh(current: string, count: number) :Promise<[string, number]> {
+    await invoke("new_task", {
+      t: {
+        id: 1,
+        title: "task_name",
+        // create_time: null,
+        // last_update_time: Date(),
+        childs: [],
+        state: "Pending"
+      } as Task,
+    })
     return await invoke("refresh", { value: current, count: count })
 }
 </script>

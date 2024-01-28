@@ -1,6 +1,9 @@
+use serde::{Deserialize, Serialize};
+use chrono::{DateTime, Local};
 use rand::Rng;
-use chrono::prelude::*;
 
+
+#[derive(Serialize, Deserialize, Debug)]
 pub enum State {
     Pending,
     Doing,
@@ -11,20 +14,26 @@ pub enum State {
 
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+pub struct TaskConfig {
+    pub title: String
+}
+
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Task {
     pub id: u64,
     pub title: String,
-    pub create_time: DateTime<chrono::Local>,
-    pub last_update_time: Option<DateTime<chrono::Local>>,
+    pub create_time: Option<DateTime<Local>>,
+    pub last_update_time: Option<DateTime<Local>>,
     pub childs: Vec<u64>,
     pub state: State,
 }
 
-pub fn new_task(title: String) -> Task {
+pub fn new(cfg: TaskConfig) -> Task {
     return Task {
         id: alloc_id(),
-        title: title,
-        create_time: Local::now(),
+        title: cfg.title,
+        create_time: Some(Local::now()),
         last_update_time: None,
         childs: Vec::new(),
         state: State::Pending }
