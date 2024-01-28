@@ -4,34 +4,33 @@ import { invoke } from '@tauri-apps/api'
 
 defineProps<{ msg: string }>()
 
-var count = ref(0)
-var str_value = ref("")
+var new_id = ref(0)
 
-interface Task {
-  id?: number | null,
-  title: string,
-  create_time?: Date | null | undefined,
-  last_update_time?: Date | null | undefined,
-  childs: [number] | [],
-  state: "Pending" | "Doing" | "Paused" | "Canceld" | "Done" | "Failed"
+// not used
+// interface Task {
+//   id?: number | null,
+//   title: string,
+//   create_time?: Date | null | undefined,
+//   last_update_time?: Date | null | undefined,
+//   childs: [number] | [],
+//   state: "Pending" | "Doing" | "Paused" | "Canceld" | "Done" | "Failed"
+// }
+
+interface TaskConfig {
+  title: string
 }
 
 async function doClickCount(count :number) :Promise<number> {
     return await invoke("next_number", { value: count })
 }
 
-async function doRefresh(current: string, count: number) :Promise<[string, number]> {
-    await invoke("new_task", {
+async function newTask(title: string) :Promise<number> {
+    console.log("title is ", title)
+    return await invoke("new_task", {
       t: {
-        id: 1,
-        title: "task_name",
-        // create_time: null,
-        // last_update_time: Date(),
-        childs: [],
-        state: "Pending"
-      } as Task,
+        title: title,
+      } as TaskConfig,
     })
-    return await invoke("refresh", { value: current, count: count })
 }
 </script>
 
@@ -39,13 +38,17 @@ async function doRefresh(current: string, count: number) :Promise<[string, numbe
   <h1>{{ msg }}</h1>
 
   <div class="card">
-    <button type="button" @click="doClickCount(count).then((next)=>count=next)">count is {{ count }}</button>
-    <p>
-      Edit
-      <code>components/task-box.vue</code> to test HMR
-    </p>
-    <p>value is "{{ str_value }}"</p>
-    <button type="button" @click="doRefresh(str_value, count).then((tuple)=>{str_value=tuple[0]; count=tuple[1];})">reflush</button>
+    <button type="button" @click="doClickCount(new_id).then((next)=>new_id=next)">id is {{ new_id }}</button>
+    <br>
+    <input type="text" id="task_title" name="task_title" ref="task_title">
+    <br>
+    <button type="button" @click="newTask(($refs.task_title as HTMLInputElement).value)
+      .then((id: number)=>{
+            new_id=id;
+            console.log('id is {}', id);
+        })
+      .catch((error)=>{console.log(error)}
+      )">new task</button>
   </div>
 
 </template>

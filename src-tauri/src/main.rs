@@ -6,16 +6,10 @@ mod task;
 use std::{sync::Mutex, vec::Vec};
 
 #[tauri::command]
-fn next_number(value: i32) -> i32 {
-    return value+1
-}
-
-#[tauri::command]
-fn refresh(value: String, count: i32) -> (String, i32) {
-    if value.len() <= 9 {
-        return (value + "abc", count+1)
-    } else {
-        return (String::from(&value[0..3]),count+1)// String::from(&value[0..3])
+fn next_number(value: Option<i32>) -> i32 {
+    match value {
+    Some(num) => num+1,
+    None => 0,
     }
 }
 
@@ -25,13 +19,15 @@ struct Server {
 }
 
 impl Server {
-    pub fn new_task(& mut self, cfg:task::TaskConfig) {
+    pub fn new_task(& mut self, cfg:task::TaskConfig) -> u64 {
         let nt = task::new(cfg);
+        let id = nt.id;
         println!("new task id:{}, title:{}", nt.id, nt.title);
         self.tasks.push(nt);
         for ele in &self.tasks {
             println!("curr task id:{}, title:{}", ele.id, ele.title);
         }
+        return id
     }
 }
 
@@ -39,18 +35,16 @@ pub struct ServerState(Mutex<Server>);
 
 
 #[tauri::command]
-fn new_task(state: tauri::State<ServerState>, t:task::TaskConfig) {
+fn new_task(state: tauri::State<ServerState>, t:task::TaskConfig) -> u64 {
     let mut s = state.0.lock().unwrap();
     println!("{}", t.title);
-    s.new_task(t);
-    
+    return s.new_task(t);
 }
 
 fn main() {
-    
     tauri::Builder::default()
         .manage(ServerState(Default::default()))
-        .invoke_handler(tauri::generate_handler![next_number,refresh, new_task])
+        .invoke_handler(tauri::generate_handler![next_number, new_task])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
