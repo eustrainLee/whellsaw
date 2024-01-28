@@ -2,7 +2,6 @@ use serde::{Deserialize, Serialize};
 use chrono::{DateTime, Local};
 use rand::Rng;
 
-
 #[derive(Serialize, Deserialize, Debug)]
 pub enum State {
     Pending,
@@ -11,7 +10,6 @@ pub enum State {
     Canceld,
     Done,
     Failed,
-
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -34,9 +32,10 @@ pub fn new(cfg: TaskConfig) -> Task {
         id: alloc_id(),
         title: cfg.title,
         create_time: Some(Local::now()),
-        last_update_time: None,
+        last_update_time: Some(Local::now()),
         childs: Vec::new(),
-        state: State::Pending }
+        state: State::Pending
+    }
 }
 
 fn alloc_id() -> u64 {
