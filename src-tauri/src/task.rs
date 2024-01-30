@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use chrono::{DateTime, Local};
 use rand::Rng;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
 pub enum State {
     Pending,
     Doing,
@@ -17,7 +17,7 @@ pub struct TaskConfig {
     pub title: String
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct Task {
     pub id: u64,
     pub title: String,
