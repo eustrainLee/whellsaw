@@ -3,9 +3,6 @@ import task_box from './components/task-box.vue'
 </script>
 
 <template>
-  <div>
-    <p>whellsaw</p>
-  </div>
   <task_box msg="Hi! whellsaw" />
 </template>
 

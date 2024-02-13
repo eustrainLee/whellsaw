@@ -41,8 +41,8 @@ impl Server {
         return None
     }
     
-    pub fn list_task(& mut self) -> Option<Vec<task::Task>> {
-        return Some(self.tasks.clone());
+    pub fn list_task(& mut self) -> Vec<task::Task> {
+        return self.tasks.clone();
     }
 }
 
@@ -63,7 +63,7 @@ fn get_task(state: tauri::State<ServerState>, id: u64) -> Option<task::Task> {
 }
 
 #[tauri::command]
-fn list_task(state: tauri::State<ServerState>) -> Option<Vec<task::Task>> {
+fn list_task(state: tauri::State<ServerState>) -> Vec<task::Task> {
     let mut s = state.0.lock().unwrap();
     return s.list_task();
 }

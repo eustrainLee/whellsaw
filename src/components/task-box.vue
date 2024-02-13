@@ -28,7 +28,7 @@ async function newTask(title: string) :Promise<number> {
     })
 }
 
-async function getTask(id: number) :Promise<Task> {
+async function getTask(id: number) :Promise<Task|null> {
     return await invoke("get_task", {
       id: id,
     })
@@ -52,28 +52,33 @@ async function listTask() :Promise<[Task]> {
             display_value=String(id);
             console.log('id is {}', id);
         })
-      .catch((error)=>{console.log(error)}
-      )">new task</button>
+      .catch((error)=>{console.log(error);})
+      ">new task</button>
 
     <button type="button" @click="getTask(Number(($refs.task_title as HTMLInputElement).value))
-      .then((task: Task)=>{
-        display_value = task.title
-            console.log('title is {}', task.title);
-        })
-      .catch((error)=>{console.log(error)}
-      )">get task</button>
+      .then((task: Task|null)=>{
+        if (task == null) {
+          display_value = '<<not found>>';
+          console.log('not found');
+        } else {
+          display_value = task.title;
+          console.log('title is {}', task.title);
+        }
+      })
+      .catch((error)=>{console.log(error);})
+      ">get task</button>
 
     <button type="button" @click="listTask()
       .then((tasks: [Task])=>{
-        console.log('tasks:');
         display_value = '';
+        console.log('tasks:');
         for (let i = 0; i < tasks.length; i++) {
           display_value = display_value + tasks[i].id + ':' + tasks[i].title + ';'
           console.log('id is {}, title is {}', tasks[i].id, tasks[i].title);
         }
-        })
-      .catch((error)=>{console.log(error)}
-      )">list task</button>
+      })
+      .catch((error)=>{console.log(error);})
+      ">list task</button>
   </div>
 
 </template>
