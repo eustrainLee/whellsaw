@@ -1,42 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { invoke } from '@tauri-apps/api'
+import { Task, newTask, getTask, listTask } from '../task/task'
 
 defineProps<{ msg: string }>()
 
 var display_value = ref("")
-
-// not used
-interface Task {
-  id?: number | null,
-  title: string,
-  create_time?: Date | null | undefined,
-  last_update_time?: Date | null | undefined,
-  childs: [number] | [],
-  state: "Pending" | "Doing" | "Paused" | "Canceld" | "Done" | "Failed"
-}
-
-interface TaskConfig {
-  title: string
-}
-async function newTask(title: string) :Promise<number> {
-    console.log("title is ", title)
-    return await invoke("new_task", {
-      t: {
-        title: title,
-      } as TaskConfig,
-    })
-}
-
-async function getTask(id: number) :Promise<Task|null> {
-    return await invoke("get_task", {
-      id: id,
-    })
-}
-
-async function listTask() :Promise<[Task]> {
-    return await invoke("list_task", {})
-}
 </script>
 
 <template>
