@@ -5,6 +5,8 @@ import { Task, newTask, getTask, listTask } from '../task/task'
 defineProps<{ msg: string }>()
 
 var display_value = ref("")
+var total_tasks = ref([] as Task[]);
+
 </script>
 
 <template>
@@ -44,9 +46,16 @@ var display_value = ref("")
           display_value = display_value + tasks[i].id + ':' + tasks[i].title + ';'
           console.log('id is {}, title is {}', tasks[i].id, tasks[i].title);
         }
+        total_tasks = tasks;
       })
       .catch((error)=>{console.log(error);})
       ">list task</button>
+      <div v-for="this_task in total_tasks" :key="this_task.id?.toString()">
+        <div>
+          <span>id is {{ this_task.id }},</span>
+          <span>title is {{ this_task.title }}</span>
+        </div>
+      </div>
   </div>
 
 </template>
