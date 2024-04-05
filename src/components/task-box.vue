@@ -1,11 +1,25 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Task, newTask, getTask, listTask } from '../task/task'
+import { Task, createTask, getTask, listTask } from '../task/task'
 
 defineProps<{ msg: string }>()
 
 var display_value = ref("")
 var total_tasks = ref([] as Task[]);
+
+function on_get_task(id: number) {
+  getTask(id)
+    .then((task: Task|null)=>{
+      if (task == null) {
+        display_value.value = '<<not found>>';
+        console.log('not found');
+      } else {
+        display_value.value = task.title;
+        console.log('title is {}', task.title);
+      }
+    })
+    .catch((error)=>{console.log(error);})
+}
 
 </script>
 
@@ -17,26 +31,15 @@ var total_tasks = ref([] as Task[]);
     <br>
     <input type="text" id="task_title" name="task_title" ref="task_title">
     <br>
-    <button type="button" @click="newTask(($refs.task_title as HTMLInputElement).value)
+    <button type="button" @click="createTask(($refs.task_title as HTMLInputElement).value)
       .then((id: number)=>{
             display_value=String(id);
             console.log('id is {}', id);
         })
       .catch((error)=>{console.log(error);})
-      ">new task</button>
+      ">create task</button>
 
-    <button type="button" @click="getTask(Number(($refs.task_title as HTMLInputElement).value))
-      .then((task: Task|null)=>{
-        if (task == null) {
-          display_value = '<<not found>>';
-          console.log('not found');
-        } else {
-          display_value = task.title;
-          console.log('title is {}', task.title);
-        }
-      })
-      .catch((error)=>{console.log(error);})
-      ">get task</button>
+    <button type="button" @click="on_get_task(Number(($refs.task_title as HTMLInputElement).value))">get task</button>
 
     <button type="button" @click="listTask()
       .then((tasks: [Task])=>{
