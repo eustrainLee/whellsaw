@@ -13,6 +13,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+:root {
+  --input-border: #8b8a8b;
+  --input-focus-h: 245;
+  --input-focus-s: 100%;
+  --input-focus-l: 42%;
+}
+
 body {
   margin: 0;
   display: flex;
