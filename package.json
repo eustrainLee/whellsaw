@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@tauri-apps/api": "^1.5.3",
-    "vue": "^3.3.11"
+    "vue": "^3.3.11",
+    "vue-router": "^4.3.0",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",

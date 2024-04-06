@@ -1,14 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Task, createTask, getTask, listTask } from '../task/task'
-
-defineProps<{ msg: string }>()
-
+import { Task, create_task_with_title, get_task, list_tasks } from '../task/task'
 var display_value = ref("")
 var total_tasks = ref([] as Task[]);
 
 function on_get_task(id: number) {
-  getTask(id)
+  get_task(id)
     .then((task: Task|null)=>{
       if (task == null) {
         display_value.value = '<<not found>>';
@@ -24,14 +21,12 @@ function on_get_task(id: number) {
 </script>
 
 <template>
-  <h1>{{ msg }}</h1>
-
   <div class="card">
     <text type="text">"{{ display_value }}"</text>
     <br>
-    <input type="text" id="task_title" name="task_title" ref="task_title">
+    <input type="text" id="main_task_title" name="main_task_title" ref="main_task_title">
     <br>
-    <button type="button" @click="createTask(($refs.task_title as HTMLInputElement).value)
+    <button type="button" @click="create_task_with_title(($refs.main_task_title as HTMLInputElement).value)
       .then((id: number)=>{
             display_value=String(id);
             console.log('id is {}', id);
@@ -41,7 +36,7 @@ function on_get_task(id: number) {
 
     <button type="button" @click="on_get_task(Number(($refs.task_title as HTMLInputElement).value))">get task</button>
 
-    <button type="button" @click="listTask()
+    <button type="button" @click="list_tasks()
       .then((tasks: [Task])=>{
         display_value = '';
         console.log('tasks:');
@@ -60,5 +55,8 @@ function on_get_task(id: number) {
         </div>
       </div>
   </div>
+    <button type="button" @click="
+      $router.push({name: 'create_panel'})
+      ">create task</button>
 
 </template>
