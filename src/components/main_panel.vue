@@ -26,15 +26,8 @@ function on_get_task(id: number) {
     <br>
     <input type="text" id="main_task_title" name="main_task_title" ref="main_task_title">
     <br>
-    <button type="button" @click="create_task_with_title(($refs.main_task_title as HTMLInputElement).value)
-      .then((id: number)=>{
-            display_value=String(id);
-            console.log('id is {}', id);
-        })
-      .catch((error)=>{console.log(error);})
-      ">create task</button>
 
-    <button type="button" @click="on_get_task(Number(($refs.task_title as HTMLInputElement).value))">get task</button>
+    <button type="button" @click="on_get_task(Number(($refs.main_task_title as HTMLInputElement).value))">get task</button>
 
     <button type="button" @click="list_tasks()
       .then((tasks: [Task])=>{
@@ -50,8 +43,9 @@ function on_get_task(id: number) {
       ">list task</button>
       <div v-for="this_task in total_tasks" :key="this_task.id?.toString()">
         <div>
-          <span>id is {{ this_task.id }},</span>
+          <span>id is {{ this_task.id }}, </span>
           <span>title is {{ this_task.title }}</span>
+          <span>parent is {{ this_task.parent }}</span>
         </div>
       </div>
   </div>
