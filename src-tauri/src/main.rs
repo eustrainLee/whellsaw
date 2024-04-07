@@ -20,7 +20,7 @@ struct Server {
 
 impl Server {
     pub fn create_task(& mut self, cfg:task::TaskConfig) -> u64 {
-        let nt = task::new(cfg);
+        let nt = task::Task::from_config(cfg);
         let id = nt.id;
         println!("create task id:{}, title:{}", nt.id, nt.title);
         self.tasks.push(nt);

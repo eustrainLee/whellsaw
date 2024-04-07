@@ -58,7 +58,7 @@ export default {
     <div>
       <label for="task_parent">parent</label>
       <select id="task_parent" ref="task_parent">
-        <option></option>
+        <option :key="0" :value="0"></option>
         <option v-for="task in current_tasks" :key="task.id" :value="task.id"> {{ task.title }} </option>
       </select>
     </div>
@@ -77,7 +77,7 @@ export default {
         fetch_tasks();
       })
       .catch((error: any)=>{console.log(error);});
-    ">submit</button>
+    ">create</button>
     <button type="button" @click="$router.back()">back</button>
   </div>
 </template>

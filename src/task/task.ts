@@ -5,6 +5,7 @@ export interface Task {
     title: string,
     create_time?: Date | null,
     last_update_time?: Date | null,
+    parent: number,
     childs: [number] | [],
     state: "Pending" | "Doing" | "Paused" | "Canceld" | "Done" | "Failed"
   }
