@@ -1,40 +1,8 @@
-<script lang="ts">
-import { Task, list_tasks, create_task, TaskConfig } from '../task/task'
-export default {
-  data() {
-    return {
-      loading: false,
-      post: null,
-      current_tasks: null as [Task]|null,
-      error: null,
-    }
-  },
-  created() {
-    this.$watch(
-      () => this.$route.params,
-      () => {
-        console.log("fetch Data")
-        this.fetch_tasks()
-      },
-      { immediate: true }
-    )
-  },
-  methods: {
-    fetch_tasks() {
-      this.error = this.post = null
-      this.loading = true
-      
-      list_tasks().then((loaded_tasks) => {
-        this.current_tasks = loaded_tasks
-        console.log('load tasks:', loaded_tasks)
-      }).catch((reason)=> {
-        this.error = reason.toString()
-        console.error(reason)
-      });
-    },
-    create_task
-  },
-}
+<script setup lang="ts">
+import { create_task, TaskConfig } from '../task/task'
+import { useTaskStore } from '../store/task'
+
+var taskStore = useTaskStore()
 </script>
 
 <template>
@@ -59,7 +27,7 @@ export default {
       <label for="task_parent">parent</label>
       <select id="task_parent" ref="task_parent">
         <option :key="0" :value="0"></option>
-        <option v-for="task in current_tasks" :key="task.id" :value="task.id"> {{ task.title }} </option>
+        <option v-for="task in taskStore.list_tasks" :key="task.id" :value="task.id"> {{ task.title }} </option>
       </select>
     </div>
   </div>
@@ -74,7 +42,7 @@ export default {
         parent: +(($refs.task_parent as HTMLInputElement).value as string) as number
       } as TaskConfig).then((id: number)=> {
         console.log(id);
-        fetch_tasks();
+        taskStore.load_tasks();
       })
       .catch((error: any)=>{console.log(error);});
     ">create</button>
