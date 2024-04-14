@@ -1,5 +1,7 @@
 import { invoke } from '@tauri-apps/api'
 
+export type TaskState = "Pending" | "Doing" | "Paused" | "Canceld" | "Done" | "Failed";
+
 export interface Task {
     id: number,
     title: string,
@@ -7,13 +9,13 @@ export interface Task {
     last_update_time?: Date | null,
     parent: number,
     childs: [number] | [],
-    state: "Pending" | "Doing" | "Paused" | "Canceld" | "Done" | "Failed"
+    state: TaskState
   }
   
   export interface TaskConfig {
     title: string,
-    state: "Pending" | "Doing" | "Paused" | "Canceld" | "Done" | "Failed"
-    parent: number
+    state: TaskState,
+    parent: number,
   }
   
   export async function create_task_with_title(title: string) :Promise<number> {
