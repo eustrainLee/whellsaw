@@ -1,8 +1,13 @@
 <script setup lang="ts">
-import { create_task, TaskConfig } from '../task/task'
+import { ref } from 'vue'
+import { TaskState, create_task, TaskConfig } from '../task/task'
 import { useTaskStore } from '../store/task'
 
 var taskStore = useTaskStore()
+var task_title = ref('')
+var task_state =  ref('Pending' as TaskState);
+var task_parent = ref(0);
+
 </script>
 
 <template>
@@ -10,36 +15,33 @@ var taskStore = useTaskStore()
   <div id="input_box">
     <div>
       <label for="task_title">title</label>
-      <input id="task_title" ref="task_title"></input>
+      <input v-model.trim="task_title"></input>
     </div>
     <div>
-      <label for="test_state">state</label>
-      <select id="task_state" ref="task_state">
-        <option :key="'Pending'" :value="'Pending'">pending</option>
-        <option :key="'Doing'" :value="'Doing'">doing</option>
-        <option :key="'Paused'" :value="'Paused'">paused</option>
-        <option :key="'Canceld'" :value="'Canceld'">canceld</option>
-        <option :key="'Done'" :value="'Done'">done</option>
-        <option :key="'Failed'" :value="'Failed'">failed</option>
+      <label for="task_state">state</label>
+      <select v-model="task_state">
+        <option :value="'Pending'">pending</option>
+        <option :value="'Doing'">doing</option>
+        <option :value="'Paused'">paused</option>
+        <option :value="'Canceld'">canceld</option>
+        <option :value="'Done'">done</option>
+        <option :value="'Failed'">failed</option>
       </select>
     </div>
     <div>
       <label for="task_parent">parent</label>
-      <select id="task_parent" ref="task_parent">
-        <option :key="0" :value="0"></option>
-        <option v-for="task in taskStore.list_tasks" :key="task.id" :value="task.id"> {{ task.title }} </option>
+      <select v-model.number="task_parent" type="number">
+        <option :value="0">none</option>
+        <option v-for="task in taskStore.list_tasks" :value="task.id"> {{ task.title }} </option>
       </select>
     </div>
   </div>
   <div>
     <button type="button" @click="
-      console.log(($refs.task_title as HTMLInputElement).value);
-      console.log(($refs.task_state as HTMLInputElement).value);
-      console.log(($refs.task_parent as HTMLInputElement).value);
       create_task({
-        title: ($refs.task_title as HTMLInputElement).value as string,
-        state: ($refs.task_state as HTMLInputElement).value as string,
-        parent: +(($refs.task_parent as HTMLInputElement).value as string) as number
+        title: task_title,
+        state: task_state as TaskState,
+        parent: task_parent,
       } as TaskConfig).then((id: number)=> {
         console.log(id);
         taskStore.load_tasks();
